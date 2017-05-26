@@ -36,14 +36,13 @@ def ssh_connect(ip, username, key):
 def upload_file(client, filename, target=None, perm=0o0400):
     print("uploading", filename)
     if target is None:
-        target = "./" + os.path.basename(filename)
-    print("target is ", target)
+        target = os.path.basename(filename)
     sftp = client.open_sftp()
     fp = sftp.file(target, mode='w')
     fp.write(open(filename).read())
     fp.close()
 
-    sftp.chmod(filename, perm)
+    sftp.chmod(target, perm)
     sftp.close()
     print("success")
 

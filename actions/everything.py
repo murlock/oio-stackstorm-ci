@@ -8,7 +8,11 @@ import time
 import shutil
 import uuid
 
-from st2actions.runners.pythonrunner import Action
+try:
+    from st2actions.runners.pythonrunner import Action
+except:
+    class Action(object):
+        pass
 
 from common import remove_keypair, download_directory
 from common import ssh_connect, ssh_get_key, upload_result
@@ -68,20 +72,14 @@ def run_job():
 
 class ST2Job(Action):
     def __init__(self, config):
-        print(os.path.dirname(os.path.realpath(__file__)))
         for key, val in config.items():
             create_vm.CREDS[key] = val
         super(ST2Job, self).__init__(config=config)
 
     def run(self, **kwargs):
         create_vm.os_connect()
-        debug_stuff()
         run_job()
 
-def debug_stuff():
-    for key, val in os.environ.items():
-        print("[%s] = %s" % (key, val))
-
 if __name__ == "__main__":
-    debug_stuff()
+    create_vm.os_connect()
     run_job()
