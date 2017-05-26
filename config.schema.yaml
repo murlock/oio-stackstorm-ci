@@ -1,0 +1,17 @@
+---
+  OS_AUTH_URL:
+    description: "OpenStack Authentication URL"
+    type: "string"
+  OS_TENANT_ID:
+    description: "OpenStack Tenant ID"
+    type: "string"
+  OS_TENANT_NAME:
+    description: "OpenStack Tenant Name"
+    type: "string"
+  OS_USERNAME:
+    description: "OpenStack Username"
+    type: "string"
+  OS_PASSWORD:
+    description: "OpenStack Password"
+    type: "string"
+    secret: true
