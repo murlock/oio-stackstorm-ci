@@ -13,7 +13,7 @@ def do_run(ip, username, keystr, keypass=None):
     client = ssh_connect(ip, username, key)
 
     # upload minimal requirements stuff
-    upload_file(client, BASE_DIR + '/run.sh', 0o0555)
+    upload_file(client, BASE_DIR + '/run.sh', perm=0o0555)
 
     (stdin, stdout, stderr) = client.exec_command('./run.sh', get_pty=True)
     for line in stdout:

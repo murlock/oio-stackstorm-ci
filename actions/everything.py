@@ -55,7 +55,8 @@ def run_job():
 
     # and upload somewhere
     # TODO: include properies like branch/tag/commit id/PR/time consumed
-    upload_result(tmpdir, os.getenv('RESULT_UPLOAD_URL'))
+    if os.getenv('RESULT_UPLOAD_URL'):
+        upload_result(tmpdir, os.getenv('RESULT_UPLOAD_URL'))
 
     # remove tmpdir
     shutil.rmtree(tmpdir)
@@ -67,8 +68,8 @@ def run_job():
 
 class ST2Job(Action):
     def __init__(self, config):
+        print(os.path.dirname(os.path.realpath(__file__)))
         for key, val in config.items():
-            print("setting %s to %s" % (key, val))
             create_vm.CREDS[key] = val
         super(ST2Job, self).__init__(config=config)
 

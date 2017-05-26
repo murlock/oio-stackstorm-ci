@@ -33,10 +33,13 @@ def ssh_connect(ip, username, key):
     return client
 
 
-def upload_file(client, filename, perm=0o0400):
+def upload_file(client, filename, target=None, perm=0o0400):
     print("uploading", filename)
+    if target is None:
+        target = "./" + os.path.basename(filename)
+    print("target is ", target)
     sftp = client.open_sftp()
-    fp = sftp.file(filename, mode='w')
+    fp = sftp.file(target, mode='w')
     fp.write(open(filename).read())
     fp.close()
 
