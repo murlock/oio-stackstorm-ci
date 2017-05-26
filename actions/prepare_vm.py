@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+import os
 import sys
 
 from paramiko import SSHClient, RSAKey, AutoAddPolicy
 
 from common import ssh_connect, upload_file, ssh_get_key
+
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 def do_prepare(ip, username, keystr, keypass=None):
     key = ssh_get_key(keystr, keypass)
@@ -13,7 +16,7 @@ def do_prepare(ip, username, keystr, keypass=None):
     client = ssh_connect(ip, username, key)
 
     # upload minimal requirements stuff
-    upload_file(client, 'install.sh',  0o0555)
+    upload_file(client, BASE_DIR + '/install.sh',  0o0555)
 
     # install Docker
     print("install docker")
@@ -27,7 +30,7 @@ def do_prepare(ip, username, keystr, keypass=None):
     # close and reopen connection to refresh ID and Groups
     client = ssh_connect(ip, username='ubuntu', key=key)
 
-    upload_file(client, 'build.sh', 0o0555)
+    upload_file(client, BASE_DIR + '/build.sh', 0o0555)
     print("build docker image")
     (stdin, stdout, stderr) = client.exec_command('./build.sh')
     for line in stdout:
