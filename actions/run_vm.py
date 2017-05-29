@@ -17,4 +17,4 @@ def do_run(ip, username, keystr, keypass=None):
 
     (stdin, stdout, stderr) = client.exec_command('./run.sh', get_pty=True)
     for line in stdout:
-        print(line, end="")
+        print(line.encode('utf-8'), end="")

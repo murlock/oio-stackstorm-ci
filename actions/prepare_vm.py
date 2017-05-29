@@ -23,7 +23,7 @@ def do_prepare(ip, username, keystr, keypass=None):
     print("install docker")
     (stdin, stdout, stderr) = client.exec_command('./install.sh')
     for line in stdout:
-        print(line, end="")
+        print(line.encode('utf-8'), end="")
 
     print("done")
     client.close()
@@ -35,4 +35,4 @@ def do_prepare(ip, username, keystr, keypass=None):
     print("build docker image")
     (stdin, stdout, stderr) = client.exec_command('./build.sh')
     for line in stdout:
-        print(line, end="")
+        print(line.encode('utf-8'), end="")
