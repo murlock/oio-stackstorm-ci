@@ -59,11 +59,16 @@ def run_job():
 
     # and upload somewhere
     # TODO: include properies like branch/tag/commit id/PR/time consumed
+    to_delete = True
     if os.getenv('RESULT_UPLOAD_URL'):
-        upload_result(tmpdir, os.getenv('RESULT_UPLOAD_URL'))
+        print("Uploading result to", os.getenv('RESULT_UPLOAD_URL'))
+        to_delete = upload_result(tmpdir, os.getenv('RESULT_UPLOAD_URL'))
 
     # remove tmpdir
-    shutil.rmtree(tmpdir)
+    if to_delete:
+        shutil.rmtree(tmpdir)
+    else:
+        print("Result of build available in", tmpdir)
 
     if properties['keycreated']:
         remove_keypair(create_vm.CONN, properties['keyname'])
