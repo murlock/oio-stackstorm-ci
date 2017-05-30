@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+from collections import OrderedDict
 import json
 import os
 import re
@@ -28,12 +29,13 @@ def header():
 .test_skip  { color: gray; fill: gray; stroke; gray}
 .mono       { font-family: monospace; }
 ul          { list-style: none; padding: 0px; }
-a           { color: inherit; text-decoration:none; }
+a           { color: inherit; text-decoration:none; cursor: pointer; }
 body        { font-size: 0.8em; }
 .ct-label   { font-size: 1.2em; color: white; fill: white; }
 .log        { font-family: monospace; }
 .hidden     { display: none; }
 .float      { float: left; }
+.center     { text-align: center; }
 </style>
 </head>
 <body>"""
@@ -54,7 +56,7 @@ class Result2Html(object):
 
     def __init__(self, logfile):
         self.name = "generic"
-        self.count = dict(zip(LEVEL, (0,) * len(LEVEL)))
+        self.count = OrderedDict(zip(LEVEL, (0,) * len(LEVEL)))
         self.html = []
         self.log = logfile
 
@@ -76,9 +78,14 @@ class Result2Html(object):
         <div>
         <div>
         <table>
-        <tr><td><h1>""" + self.name + """</h1><a data-res='""" + self.name + """_res'>Show/Hide</a></t>
+        <tr><td class='center'><h1>""" + self.name + """</h1>
+                <p><a data-res='""" + self.name + """_res'>Show/Hide</a></p>
+                <p><a href='""" + self.name + """'>Logs</p>
+             </td>
              <td>
         <div id='chart_""" + self.name + """' class='ct-chart ct-perfect-fourth' style='width: 300px;'></div>
+             </td>
+             <td><ul>""" + "".join(["<li>{0}: {1}</li>".format(k,v ) for k,v in self.count.items()]) + """</ul>
              </td>
         </tr>
         </table>
@@ -176,6 +183,7 @@ def create_html_report(report):
     out.write(header())
 
     items = os.listdir(report)
+    summary = {}
     for entry in items:
         path = os.path.join(report, entry)
         if not os.path.isdir(path):
@@ -187,8 +195,15 @@ def create_html_report(report):
 
         cls = ANALYSE[entry](logfile=log)
         cls.compute()
+        summary[entry] = cls.count
         out.write(cls.render())
     out.write(footer())
+    out.close()
+
+    # dump number of test ok/fails/... per testsuite
+    out = open(os.path.join(report, "summary.json"), "w")
+    json.dump(summary, out, indent=4)
+    out.close()
 
 if __name__ == "__main__":
     create_html_report(os.path.abspath(sys.argv[1]))
