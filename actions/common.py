@@ -102,8 +102,7 @@ def upload_result(result, url):
         files={"result": content},
         data={'csrfmiddlewaretoken': get.cookies['csrftoken']},
         cookies=get.cookies)
-    # any other code than 20x is considered as an error
-    if post.status_code // 100 != 2:
+    if post.status_code != requests.codes.ok:
         print("An error has occured while submitting result")
         try:
             print(post.content)
