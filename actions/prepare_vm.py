@@ -2,13 +2,11 @@
 
 from __future__ import print_function
 import os
-import sys
-
-from paramiko import SSHClient, RSAKey, AutoAddPolicy
 
 from common import ssh_connect, upload_file, ssh_get_key
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def do_prepare(ip, username, keystr, keypass=None):
     key = ssh_get_key(keystr, keypass)
