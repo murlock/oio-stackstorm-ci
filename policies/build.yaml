@@ -1,7 +1,7 @@
 name: build.concurrency
 description: Limits concurrent openioci.build executions.
 enabled: true
-resource_ref: openioci.build
+resource_ref: openioci.build_n_test
 policy_type: action.concurrency
 parameters:
     action: delay
