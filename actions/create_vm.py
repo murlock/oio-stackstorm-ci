@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 #
-# check http://git.openstack.org/cgit/openstack/python-openstacksdk/tree/examples/compute/create.py
+# check http://git.openstack.org/cgit/openstack/python-openstacksdk/tree/examples/compute/create.py # noqa
 #
 
-import os
 import sys
 from time import time
 
@@ -14,12 +13,12 @@ from common import retrieve_or_create_keypair
 
 utils.enable_logging(debug=False, stream=sys.stdout)
 
-CREDS = { 'OS_AUTH_URL': '',
-          'OS_TENANT_NAME': '',
-          'OS_USERNAME':  '',
-          'OS_PASSWORD': '',
-          'OS_REGION_NAME': '',
-        }
+CREDS = {'OS_AUTH_URL': '',
+         'OS_TENANT_NAME': '',
+         'OS_USERNAME':  '',
+         'OS_PASSWORD': '',
+         'OS_REGION_NAME': '',
+         }
 
 
 CONN = None
@@ -39,13 +38,16 @@ def os_connect():
                                  username=CREDS["OS_USERNAME"],
                                  password=CREDS["OS_PASSWORD"])
 
+
 def create_server(conn):
     print("Create Server:")
 
     image = conn.compute.find_image(IMAGE_NAME)
     print(image)
     start = time()
+
     def create_volume():
+        # TODO: we should use parameters
         volume = conn.block_store.create_volume(name=VOLUME_NAME,
                                                 image_id=image.id,
                                                 volume_type="SSD",
@@ -58,28 +60,24 @@ def create_server(conn):
                                          wait=120)
         return volume
 
-    try:
-        # TODO: try to find from its name
-        volume = conn.block_store.get_volume("020dc984-b2d9-4846-8e4c-25cf3259004e")
-    except exceptions.NotFoundException:
-        volume = create_volume()
+    volume = create_volume()
     print("Volume is ready ! (%5.2f sec)" % (time() - start))
 
     flavor = conn.compute.find_flavor(FLAVOR_NAME)
     network = conn.network.find_network(NETWORK_NAME)
-    (keypair, created) = retrieve_or_create_keypair(conn, name=KEYPAIR_NAME, create_if_missing=True)
-
+    (keypair, created) = retrieve_or_create_keypair(conn, name=KEYPAIR_NAME,
+                                                    create_if_missing=True)
 
     def _create_server():
         # https://developer.rackspace.com/docs/cloud-servers/v2/extensions/ext-boot-from-volume/
+        # FIXME: delete_on_termination should be an option for post mortem
         server = conn.compute.create_server(name=SERVER_NAME,
-                                            #image_id=image.id, # OK but it use image
                                             block_device_mapping=[{
                                                 'boot_index': 0,
                                                 'uuid': volume.id,
                                                 'source_type': 'volume',
                                                 'destination_type': 'volume',
-                                                'delete_on_termination': True, # FIXME: use option for post mortem
+                                                'delete_on_termination': True,
                                             }],
                                             flavor_id=flavor.id,
                                             networks=[{"uuid": network.id}],
@@ -97,13 +95,16 @@ def create_server(conn):
     # retrieve available floating_ip
 
     server_ip = None
-    for _ip in conn.network.ips(project_id=conn.session.get_project_id(), status='DOWN'):
+    for _ip in conn.network.ips(project_id=conn.session.get_project_id(),
+                                status='DOWN'):
         server_ip = _ip
         break
 
-    conn.compute.add_floating_ip_to_server(server, server_ip.floating_ip_address)
+    conn.compute.add_floating_ip_to_server(server,
+                                           server_ip.floating_ip_address)
 
-    print("Instance is ready at %s with KEYPAIR %s" % (server_ip.floating_ip_address, KEYPAIR_NAME))
+    print("Instance is ready at %s with KEYPAIR %s" % (
+        server_ip.floating_ip_address, KEYPAIR_NAME))
 
     return {
         'ip': server_ip.floating_ip_address,
@@ -114,8 +115,10 @@ def create_server(conn):
         'server_id': server.id
     }
 
+
 def delete_server(conn, server_id):
     conn.compute.delete_server(server_id)
+
 
 if __name__ == "__main__":
     create_server(CONN)

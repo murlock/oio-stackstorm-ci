@@ -14,6 +14,7 @@ LEVEL = {
     'SKIP': 'test_skip'
 }
 
+
 def header():
     return """<!DOCTYPE html>
 <html>
@@ -38,7 +39,8 @@ body        { font-size: 0.8em; }
 .center     { text-align: center; }
 </style>
 </head>
-<body>"""
+<body>""" # noqa
+
 
 def footer():
     return """
@@ -52,14 +54,13 @@ def footer():
 </body></html>
 """
 
-class Result2Html(object):
 
+class Result2Html(object):
     def __init__(self, logfile):
         self.name = "generic"
         self.count = OrderedDict(zip(LEVEL, (0,) * len(LEVEL)))
         self.html = []
         self.log = logfile
-
 
     def compute(self):
         pass
@@ -85,7 +86,7 @@ class Result2Html(object):
              <td>
         <div id='chart_""" + self.name + """' class='ct-chart ct-perfect-fourth' style='width: 300px;'></div>
              </td>
-             <td><ul>""" + "".join(["<li>{0}: {1}</li>".format(k,v ) for k,v in self.count.items()]) + """</ul>
+             <td><ul>""" + "".join(["<li>{0}: {1}</li>".format(k, v) for k, v in self.count.items()]) + """</ul>
              </td>
         </tr>
         </table>
@@ -103,7 +104,7 @@ class Result2Html(object):
         })
         })();
         </script>"""
-        output = piechart #
+        output = piechart
 
         output += "<div id='{name}_res' class='hidden'>".format(name=self.name)
         output += "<ul>"
@@ -124,17 +125,20 @@ class Result2Html(object):
         with open(log) as f_in:
             for line in f_in:
                 curline += 1
-                res.append("<a name='{name}_{tag}_{curline}'>{line}</a>\n".format(
-                    name=self.name, tag=tag, line=line, curline=curline))
+                res.append(
+                    "<a name='{name}_{tag}_{curline}'>{line}</a>\n".format(
+                        name=self.name, tag=tag, line=line, curline=curline))
         output += "<br/>".join(res)
         output += "</div>"
         return output
 
-
     def colorize(self, line, level, href):
-        self.html.append("<li class='{color}' data-href='{name}_res_{href}'>{line}</li>".format(
-            color=LEVEL[level], href=href, name=self.name, line=line))
+        self.html.append(
+            "<li class='{color}' data-href='{name}_res_{href}'>{line}</li>"
+            .format(color=LEVEL[level], href=href, name=self.name,
+                    line=line))
         self.count[level] += 1
+
 
 class S3Ceph(Result2Html):
     def __init__(self, *args, **kwargs):
@@ -152,6 +156,7 @@ class S3Ceph(Result2Html):
                     continue
                 self.colorize(line, word, href=curline)
 
+
 class S3Cmd(Result2Html):
     def __init__(self, *args, **kwargs):
         super(S3Cmd, self).__init__(*args, **kwargs)
@@ -166,7 +171,7 @@ class S3Cmd(Result2Html):
                 line = line.strip('\n')
                 line = self.ansi_escape.sub('', line)
                 word = line.split(' ')[-1].upper()
-                if 'FAIL' in line: # should be a regex
+                if 'FAIL' in line:  # should be a regex
                     word = 'FAIL'
                 if word not in LEVEL:
                     continue
@@ -177,6 +182,7 @@ ANALYSE = {
     "s3ceph": S3Ceph,
     "s3cmd": S3Cmd,
 }
+
 
 def create_html_report(report):
     out = open(os.path.join(report, "index.html"), "w")
@@ -204,6 +210,7 @@ def create_html_report(report):
     out = open(os.path.join(report, "summary.json"), "w")
     json.dump(summary, out, indent=4)
     out.close()
+
 
 if __name__ == "__main__":
     create_html_report(os.path.abspath(sys.argv[1]))

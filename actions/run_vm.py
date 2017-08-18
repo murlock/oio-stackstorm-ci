@@ -2,11 +2,11 @@
 
 from __future__ import print_function
 import os
-import sys
 
 from common import ssh_connect, upload_file, ssh_get_key
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+
 
 def do_run(ip, username, keystr, keypass=None):
     key = ssh_get_key(keystr, keypass)
