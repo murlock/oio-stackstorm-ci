@@ -36,9 +36,12 @@ class BuildAction(Action):
         create_vm.os_connect()
         try:
             self.build()
+            ret = (True, "Success")
         except:
             traceback.print_exc()
+            ret = (False, "Failed")
         self.cleanup()
+        return ret
 
     def build(self):
         # FIXME: should be PR name or git revision
