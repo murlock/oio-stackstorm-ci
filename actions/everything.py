@@ -13,7 +13,8 @@ try:
     from st2actions.runners.pythonrunner import Action
 except:
     class Action(object):
-        pass
+        def __init__(self, config):
+            pass
 
 from common import remove_keypair, download_directory
 from common import ssh_connect, ssh_get_key, upload_result
@@ -24,11 +25,25 @@ from run_vm import do_run
 from html import create_html_report
 
 
-class OpenstackJob(object):
-    def __init__(self):
+class BuildAction(Action):
+    def __init__(self, config):
+        for key, val in config.items():
+            create_vm.CREDS[key] = val
+        super(BuildAction, self).__init__(config=config)
         self.properties = {}
 
     def run(self):
+        create_vm.os_connect()
+        try:
+            self.build()
+            ret = (True, "Success")
+        except:
+            traceback.print_exc()
+            ret = (False, "Failed")
+        self.cleanup()
+        return ret
+
+    def build(self):
         # FIXME: should be PR name or git revision
         create_vm.SERVER_NAME = "{0}-{1}".format("master", str(uuid.uuid1()))
         create_vm.VOLUME_NAME = create_vm.SERVER_NAME + "-vol"
@@ -85,37 +100,14 @@ class OpenstackJob(object):
                                     self.properties['server_id'])
         self.properties = {}
 
-    def __del__(self):
-        self.cleanup()
-
-
-class ST2Job(Action):
-    def __init__(self, config):
-        for key, val in config.items():
-            create_vm.CREDS[key] = val
-        super(ST2Job, self).__init__(config=config)
-
-    def run(self, **kwargs):
-        create_vm.os_connect()
-        job = OpenstackJob()
-        try:
-            job.run()
-        except:
-            traceback.print_exc()
-        job.cleanup()
-
 
 def cli():
+    cfg = {}
     for key in ['OS_AUTH_URL', 'OS_PASSWORD', 'OS_TENANT_ID',
                 'OS_TENANT_NAME', 'OS_USERNAME']:
-        create_vm.CREDS[key] = os.getenv(key)
-    create_vm.os_connect()
-    job = OpenstackJob()
-    try:
-        job.run()
-    except:
-        traceback.print_exc()
-    job.cleanup()
+        cfg[key] = os.getenv(key)
+    job = BuildAction(cfg)
+    job.run()
 
 
 if __name__ == "__main__":
