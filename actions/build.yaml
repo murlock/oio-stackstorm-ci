@@ -3,5 +3,13 @@ description: launch a VM, build Docker and run tests
 enabled: true
 entry_point: everything.py
 name: build_n_test
-# should be run-python and use ST2 class
 runner_type: run-python
+notify:
+  on-success:
+    routes:
+      - slack
+    message: '#dev Nightly build is finished'
+  on-failure:
+    routes:
+      - slack
+    message: '#dev Nightly build is a failure'
