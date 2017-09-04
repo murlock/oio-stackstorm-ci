@@ -7,9 +7,13 @@ runner_type: run-python
 notify:
   on-success:
     routes:
-      - slack
-    message: '#dev Nightly build is finished'
+      - slack_build
+    message: 'Nightly build is finished'
+    data:
+      channel: '#dev'
   on-failure:
     routes:
-      - slack
-    message: '#dev Nightly build is a failure'
+      - slack_build
+    message: 'Nightly build fails'
+    data:
+      channel: '#dev'
