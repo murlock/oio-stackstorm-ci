@@ -10,12 +10,12 @@ notify:
       - slackbuild
     message: 'Nightly build is finished'
     data:
-      channel: '#dev'
+      channel: '#github'
       username: 'nightly-build'
   on-failure:
     routes:
       - slackbuild
     message: 'Nightly build fails'
     data:
-      channel: '#dev'
+      channel: '#github'
       username: 'nightly-build'
