@@ -8,12 +8,13 @@ notify:
   on-success:
     routes:
       - slackbuild
-    message: |
-        Build is finished
-        {% for suite, results in action_results.result["res"].items() %}
-          {{ suite }}: {% for  k, v in results.items() %}
-          {{ k }} - {{ v }}
-        {% endfor %}{% endfor %}
+    message:
+      "{% for suite, results in action_results.result['res'].items() %}
+          {{ suite }}: `
+          {% for  k, v in results.items() %}
+            {{ k|lower }} {{ v }}
+          {% endfor %} `
+       {% endfor %}"
     data:
       channel: '#github'
       username: 'nightly-build'
