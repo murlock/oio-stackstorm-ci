@@ -35,11 +35,11 @@ class BuildAction(Action):
     def run(self):
         create_vm.os_connect()
         try:
-            self.build()
-            ret = (True, "Success")
+            results = self.build()
+            ret = (True, {'res': results})
         except:
             traceback.print_exc()
-            ret = (False, "Failed")
+            ret = (False, {'error': traceback.format_exc()})
         self.cleanup()
         return ret
 
@@ -76,7 +76,7 @@ class BuildAction(Action):
         client = ssh_connect(self.properties['ip'], 'ubuntu', key)
         download_directory(client, "output/", tmpdir)
         # build webpage
-        create_html_report(tmpdir)
+        results = create_html_report(tmpdir)
 
         # and upload somewhere
         # TODO: include properies like branch/tag/commit id/PR/time consumed
@@ -90,6 +90,7 @@ class BuildAction(Action):
             shutil.rmtree(tmpdir)
         else:
             print("Result of build available in", tmpdir)
+        return results
 
     def cleanup(self):
         if self.properties.get('keycreated', False):

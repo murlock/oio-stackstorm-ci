@@ -18,7 +18,25 @@ class EchoAction(Action):
 
     def run(self):
         print("Success")
-        return (True, "Success")
+        ret = {
+            'res': {
+                "s3ceph": {
+                    "FAIL": 0,
+                    "SKIP": 0,
+                    "OK": 34,
+                    "ERROR": 1
+                },
+                "s3cmd": {
+                    "FAIL": 28,
+                    "SKIP": 2,
+                    "OK": 11,
+                    "ERROR": 0
+                }
+            },
+            'info': 'not set at this time'
+
+        }
+        return (True, ret)
 
 
 def cli():

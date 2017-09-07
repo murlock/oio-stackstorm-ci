@@ -210,6 +210,7 @@ def create_html_report(report):
     out = open(os.path.join(report, "summary.json"), "w")
     json.dump(summary, out, indent=4)
     out.close()
+    return summary
 
 
 if __name__ == "__main__":
