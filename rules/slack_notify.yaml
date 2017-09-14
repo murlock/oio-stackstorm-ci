@@ -1,0 +1,23 @@
+---
+
+name: slack_notify
+enabled: true
+description: 'Notify about Master build and test results'
+pack: openioci
+
+trigger:
+  type: core.st2.generic.notifytrigger
+
+criteria:
+  trigger.channel:
+    pattern: slackbuild
+    type: equals
+
+action:
+  ref: slack.post_message
+  parameters:
+    username: '{{trigger.data.username}}'
+    message: '{{trigger.message}}'
+    channel: '{{trigger.data.channel}}'
+
+...

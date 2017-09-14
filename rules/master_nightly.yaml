@@ -1,0 +1,29 @@
+---
+
+name: master_nightly
+enabled: true
+description: 'Build Master and launch test'
+pack: openioci
+
+trigger:
+  type: core.st2.CronTimer
+  parameters:
+    year: '*'
+    month: '*'
+    week: '*'
+    day_of_week: '*'
+    day: '*'
+    hour: '23'
+    minute: '0'
+    second: '0'
+
+action:
+  ref: core.http
+  parameters:
+    url: 'http://localhost:9101/v1/webhooks/buildv2'
+    body: '{}'
+    method: POST
+    headers:
+      X-Github-Event: push
+
+...
