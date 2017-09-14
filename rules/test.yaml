@@ -1,0 +1,25 @@
+---
+
+name: test
+enabled: true
+description: 'Build Master and launch test'
+pack: openioci
+
+trigger:
+  type: core.st2.webhook
+  parameters:
+    url: buildv2
+
+criteria:
+  trigger.headers.X-Github-Event:
+    pattern: push
+    type: eq
+
+action:
+  ref: openioci.build_n_test
+  parameters:
+    env:
+      RESULT_UPLOAD_URL: 'http://192.168.1.183/upload/'
+    timeout: 3600
+
+...
