@@ -18,6 +18,7 @@ notify:
     data:
       channel: '#github'
       username: 'nightly-build'
+      store_key: 'build_n_test'
   on-failure:
     routes:
       - slackbuild
@@ -25,3 +26,4 @@ notify:
     data:
       channel: '#github'
       username: 'nightly-build'
+      store_key: 'build_n_test'

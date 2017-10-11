@@ -14,10 +14,11 @@ criteria:
     type: equals
 
 action:
-  ref: slack.post_message
+  ref: oiobuild.slack_dedup
   parameters:
     username: '{{trigger.data.username}}'
     message: '{{trigger.message}}'
     channel: '{{trigger.data.channel}}'
+    store_key: '{{trigger.data.store_key}}'
 
 ...
