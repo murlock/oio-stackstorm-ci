@@ -178,9 +178,48 @@ class S3Cmd(Result2Html):
                 self.colorize(line, word, href=curline)
 
 
+class OioFsPjfs(Result2Html):
+    def __init__(self, *args, **kwargs):
+        super(OioFsPjfs, self).__init__(*args, **kwargs)
+        self.name = "oiofs"
+        self.ansi_escape = re.compile(r'\x1b[^m]*m')
+        self.get_fails = re.compile(r'Failed (\d+)\/(\d+) subtests')
+        self.get_total = re.compile(r'.*Failed \d+/\d+ subtests.*')
+
+    def compute(self):
+        total = 0
+        summary = False
+        error = 0
+        for curline, line in enumerate(open(self.log)):
+            line = line.strip('\n')
+            if summary and line.startswith("Files="):
+                total = 8789
+
+            if line == "Test Summary Report":
+                summary = True
+            if summary:
+                continue
+
+            if not line.startswith("/pjdfstest/tests"):
+                continue
+            line = self.ansi_escape.sub('', line)
+            word = line.split(' ')[-1].upper()
+            if 'Failed' in line:  # should be a regex
+                word = 'ERROR'
+                error += int(self.get_fails.search(line).group(1))
+            else:
+                word = 'OK'
+            if word not in LEVEL:
+                continue
+            self.colorize(line, word, href=curline+1)
+        self.count['ERROR'] = error
+        self.count['OK'] = total - self.count['ERROR']
+
+
 ANALYSE = {
     "s3ceph": S3Ceph,
     "s3cmd": S3Cmd,
+    "oiofs_pjfs": OioFsPjfs,
 }
 
 
