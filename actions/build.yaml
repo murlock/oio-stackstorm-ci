@@ -14,7 +14,8 @@ notify:
           {% for  k, v in results.items() %}
             {{ k|lower }} {{ v }}
           {% endfor %} `
-       {% endfor %}"
+       {% endfor %}
+       Full logs: https://stackstorm.openio.io/#/history/{{action_results.result['execution_id']}}/general"
     data:
       channel: '#github'
       username: 'nightly-build'

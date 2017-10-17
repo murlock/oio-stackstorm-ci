@@ -41,6 +41,11 @@ class BuildAction(Action):
             traceback.print_exc()
             ret = (False, {'error': traceback.format_exc()})
         self.cleanup()
+        # This environment variable is not available outside of the action
+        # script, so get it here and return it to allow notification message to
+        # contain the URL to the ST2 logs:
+        # https://${ST2_HOST}/#/history/${ST2_ACTION_EXECUTION_ID}/general
+        ret[1]['execution_id'] = os.environ['ST2_ACTION_EXECUTION_ID']
         return ret
 
     def build(self):
