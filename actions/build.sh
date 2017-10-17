@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd $HOME
+
 if [ -d dockerfiles ]; then
     rm -rf dockerfiles
 fi
@@ -12,10 +14,10 @@ docker build -t sds-source ubuntu
 # TODO: push docker image to registry ?
 
 
-
 #
 # OIOFS
 #
+cd $HOME
 if [ -d oiofs ]; then
     rm -rf oiofs
 fi

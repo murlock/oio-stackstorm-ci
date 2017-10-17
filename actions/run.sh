@@ -12,3 +12,6 @@ if [ ! -d oio-qa ]; then
 fi
 cd oio-qa/ci/run
 ./run_s3.sh
+
+# OIO-FS
+./run_oiofs.sh
