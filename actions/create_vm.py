@@ -27,7 +27,7 @@ SERVER_NAME = "test-michael"
 VOLUME_NAME = "test-michael-vol"
 IMAGE_NAME = "Ubuntu-16.04-amd64-20170330"
 FLAVOR_NAME = "c1.m1.d1"
-NETWORK_NAME = "f0425167-bb56-45be-8c6a-b42f9e4a3246" # "private_network"
+NETWORK_NAME = "f0425167-bb56-45be-8c6a-b42f9e4a3246"  # "private_network"
 KEYPAIR_NAME = "mbonfils"
 
 

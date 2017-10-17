@@ -8,7 +8,8 @@ from common import ssh_connect, upload_file, ssh_get_key
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def do_prepare(ip, username, keystr, keypass=None):
+def do_prepare(ip, username, keystr, keypass=None,
+               token=""):
     key = ssh_get_key(keystr, keypass)
 
     client = ssh_connect(ip, username, key)
@@ -31,6 +32,7 @@ def do_prepare(ip, username, keystr, keypass=None):
 
     upload_file(client, BASE_DIR + '/build.sh', perm=0o0555)
     print("build docker image")
-    (stdin, stdout, stderr) = client.exec_command('./build.sh')
+    (stdin, stdout, stderr) = client.exec_command(
+        './build.sh', environment={'GITHUB_TOKEN': token})
     for line in stdout:
         print(line.encode('utf-8'), end="")

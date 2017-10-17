@@ -28,8 +28,10 @@ from html import create_html_report
 class BuildAction(Action):
     def __init__(self, config):
         for key, val in config.items():
-            create_vm.CREDS[key] = val
+            if key in create_vm.CREDS:
+                create_vm.CREDS[key] = val
         super(BuildAction, self).__init__(config=config)
+        self.github_token = config.get('GITHUB_TOKEN')
         self.properties = {}
 
     def run(self):
@@ -62,7 +64,8 @@ class BuildAction(Action):
         print("Prepare and build Docker template")
         do_prepare(self.properties['ip'],
                    'ubuntu',
-                   self.properties['keypriv'])
+                   self.properties['keypriv'],
+                   token=self.github_token)
 
         print("Launch test")
         do_run(self.properties['ip'],
@@ -105,7 +108,8 @@ class BuildAction(Action):
 def cli():
     cfg = {}
     for key in ['OS_AUTH_URL', 'OS_PASSWORD', 'OS_TENANT_ID',
-                'OS_TENANT_NAME', 'OS_USERNAME']:
+                'OS_TENANT_NAME', 'OS_USERNAME',
+                'GITHUB_TOKEN']:
         cfg[key] = os.getenv(key)
     job = BuildAction(cfg)
     job.run()
