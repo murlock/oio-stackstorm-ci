@@ -15,3 +15,7 @@
     description: "OpenStack Password"
     type: "string"
     secret: true
+  GITHUB_TOKEN:
+    description: "Github Token"
+    type: "string"
+    secret: true
