@@ -33,6 +33,6 @@ def do_prepare(ip, username, keystr, keypass=None,
     upload_file(client, BASE_DIR + '/build.sh', perm=0o0555)
     print("build docker image")
     (stdin, stdout, stderr) = client.exec_command(
-        './build.sh', environment={'GITHUB_TOKEN': token})
+        'export GITHUB_TOKEN="%s"; ./build.sh' % token)
     for line in stdout:
         print(line.encode('utf-8'), end="")

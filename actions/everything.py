@@ -33,6 +33,10 @@ class BuildAction(Action):
         super(BuildAction, self).__init__(config=config)
         self.github_token = config.get('GITHUB_TOKEN')
         self.properties = {}
+        if self.github_token:
+            print("GITHUB TOKEN:", self.github_token[0:2] + "...")
+        else:
+            print("No GITHUB TOKEN")
 
     def run(self):
         create_vm.os_connect()
