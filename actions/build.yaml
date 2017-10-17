@@ -19,6 +19,8 @@ notify:
       channel: '#github'
       username: 'nightly-build'
       store_key: 'build_n_test'
+      header: ''
+      footer: "Full logs: https://stackstorm.openio.io/#/history/{{action_results.result['execution_id']}}/general"
   on-failure:
     routes:
       - slackbuild
@@ -27,3 +29,6 @@ notify:
       channel: '#github'
       username: 'nightly-build'
       store_key: 'build_n_test'
+      header: ''
+      footer: "Full logs: https://stackstorm.openio.io/#/history/{{action_results.result['execution_id']}}/general"
+...
