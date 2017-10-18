@@ -17,7 +17,7 @@ notify:
        {% endfor %}"
     data:
       channel: '#github'
-      username: 'nightly-build'
+      username: 'openioci-build'
       store_key: 'build_n_test'
       header: ''
       footer: "Full logs: https://stackstorm.openio.io/#/history/{{action_results.result['execution_id']}}/general"
@@ -27,7 +27,7 @@ notify:
     message: 'Build fails'
     data:
       channel: '#github'
-      username: 'nightly-build'
+      username: 'openioci-build'
       store_key: 'build_n_test'
       header: ''
       footer: "Full logs: https://stackstorm.openio.io/#/history/{{action_results.result['execution_id']}}/general"
