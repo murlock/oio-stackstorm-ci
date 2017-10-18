@@ -15,7 +15,7 @@ def do_prepare(ip, username, keystr, keypass=None,
     # Fill token
     print("XXXXXXX TOKEN")
     (stdin, stdout, stderr) = client.exec_command(
-        'echo export GITHUB_TOKEN=%s >> .profile' % token)
+        'echo "export GITHUB_TOKEN=%s" > ~/.env' % token)
     print("STDOUT:")
     for line in stdout:
         print(line.encode('utf-8'), end="")
