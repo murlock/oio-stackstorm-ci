@@ -35,9 +35,6 @@ def do_prepare(ip, username, keystr, keypass=None,
     for line in stderr:
         print(line.encode('utf-8'), end="")
 
-    # reconnect to proper use of group
-    client = ssh_connect(ip, username, key)
-
     # Launch install step
     print("XXXXXXX INSTALL")
     (stdin, stdout, stderr) = client.exec_command(
@@ -48,6 +45,10 @@ def do_prepare(ip, username, keystr, keypass=None,
     print("STDERR:")
     for line in stderr:
         print(line.encode('utf-8'), end="")
+
+    # reconnect to proper use of group
+    client = ssh_connect(ip, username, key)
+
 
     # Launch build step
     print("XXXXXXX BUILD")
