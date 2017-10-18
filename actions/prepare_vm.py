@@ -12,6 +12,18 @@ def do_prepare(ip, username, keystr, keypass=None,
 
     client = ssh_connect(ip, username, key)
 
+    # Fill token
+    print("XXXXXXX TOKEN")
+    (stdin, stdout, stderr) = client.exec_command(
+        'echo export GITHUB_TOKEN=%s >> .profile' % token)
+    print("STDOUT:")
+    for line in stdout:
+        print(line.encode('utf-8'), end="")
+    print("STDERR:")
+    for line in stderr:
+        print(line.encode('utf-8'), end="")
+
+
     # Checkout oio-qa
     print("XXXXXXX CHECKOUT")
     (stdin, stdout, stderr) = client.exec_command(
@@ -23,16 +35,8 @@ def do_prepare(ip, username, keystr, keypass=None,
     for line in stderr:
         print(line.encode('utf-8'), end="")
 
-    # Fill token
-    print("XXXXXXX TOKEN")
-    (stdin, stdout, stderr) = client.exec_command(
-        'echo export GITHUB_TOKEN=%s >> .profile' % token)
-    print("STDOUT:")
-    for line in stdout:
-        print(line.encode('utf-8'), end="")
-    print("STDERR:")
-    for line in stderr:
-        print(line.encode('utf-8'), end="")
+    # reconnect to proper use of group
+    client = ssh_connect(ip, username, key)
 
     # Launch install step
     print("XXXXXXX INSTALL")
