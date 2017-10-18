@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-import os
 
 from common import ssh_connect, ssh_get_key
 
@@ -22,7 +21,6 @@ def do_prepare(ip, username, keystr, keypass=None,
     print("STDERR:")
     for line in stderr:
         print(line.encode('utf-8'), end="")
-
 
     # Checkout oio-qa
     print("XXXXXXX CHECKOUT")
@@ -48,7 +46,6 @@ def do_prepare(ip, username, keystr, keypass=None,
 
     # reconnect to proper use of group
     client = ssh_connect(ip, username, key)
-
 
     # Launch build step
     print("XXXXXXX BUILD")
