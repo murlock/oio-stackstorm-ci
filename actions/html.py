@@ -237,6 +237,9 @@ def create_html_report(report):
         if not os.path.isfile(log):
             print("Missing result file")
             continue
+        if entry not in ANALYSE:
+            print("Missing analyser entry")
+            continue
 
         cls = ANALYSE[entry](logfile=log)
         cls.compute()
