@@ -219,7 +219,7 @@ class OioFsPjfs(Result2Html):
 ANALYSE = {
     "s3ceph": S3Ceph,
     "s3cmd": S3Cmd,
-    "oiofs_pjfs": OioFsPjfs,
+    "oiofs_pjdfstest": OioFsPjfs,
 }
 
 
