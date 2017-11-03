@@ -206,7 +206,11 @@ class OioFsPjfs(Result2Html):
             word = line.split(' ')[-1].upper()
             if 'Failed' in line:  # should be a regex
                 word = 'ERROR'
-                error += int(self.get_fails.search(line).group(1))
+                try:
+                    error += int(self.get_fails.search(line).group(1))
+                except:
+                    print("Fails to parse", line, "assume one error")
+                    error += 1
             else:
                 word = 'OK'
             if word not in LEVEL:
